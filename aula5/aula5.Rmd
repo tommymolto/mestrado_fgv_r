@@ -36,3 +36,21 @@ Com esse exemplo, vamos começar consumindo o CSV de sanduiches
 sanduiches <- read.table(paste(getwd(), "Sanduiches.csv", sep="/"),header=TRUE,sep = ";", dec=",")
 
 ```
+
+## 2-Iniciando
+
+Criando rotulos para cada linha:
+
+```{r}
+row.names(sanduiches) <- sanduiches$Sanduiches
+View(sanduiches)
+```
+
+Implementa o algoritmo hierárquico e apresenta o dendrograma:
+
+```{r}
+hc <- hclust(dist(sanduiches), "average")  # explorar com outros métodos de distância que não average
+p <- ggdendrogram(hc, rotate=FALSE)       # (single, complete, ward.D)
+print(p)
+ggdendrogram(hc, rotate=TRUE)
+```
