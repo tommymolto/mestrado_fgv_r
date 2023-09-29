@@ -1,0 +1,38 @@
+---
+title: "Aula 5"
+output: html_document
+date: "2023-09-29"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Aula 5 - Exemplos de Cluster Analysis
+
+Extensão para gráficos e para Análise de Agrupamentos \# NÃO SE ESQUEÇAM DE INSTALAR OS PACKAGES!!
+
+Rodem toda fez que for iniciar
+
+```{r pressure, echo=FALSE}
+
+if (!require("ggdendro")) install.packages("ggdendro")
+library("ggdendro")
+library(ggplot2)
+```
+
+## Descobrindo seu diretorio e criando Caminhos
+
+Para quem esta perdido nisso, sempre use o comnando getwd() para saber o atual diretorio (get workink directory) e use paste, com separador "/" ou "\\" , dependendo do sistema operacional, para se localizar e abrir uma rquivo
+
+```{r pressure, echo=FALSE}
+getwd()
+paste(getwd(), "Sanduiches.csv", sep="/")
+```
+
+Com esse exemplo, vamos começar consumindo o CSV de sanduiches
+
+```{r}
+sanduiches <- read.table(paste(getwd(), "Sanduiches.csv", sep="/"),header=TRUE,sep = ";", dec=",")
+
+```
