@@ -54,3 +54,121 @@ p <- ggdendrogram(hc, rotate=FALSE)       # (single, complete, ward.D)
 print(p)
 ggdendrogram(hc, rotate=TRUE)
 ```
+
+Adiconando um titulo ao grafico:
+
+```{r}
+hcdata <- dendro_data(hc)
+ggdendrogram(hcdata, rotate=TRUE, size=2) + labs(title="Dendrograma dos Sanduíches")
+```
+
+Executando um corte em 5 grupos:
+
+```{r}
+# "Cortando" a árvore em 5 grupos
+grupos <- cutree(hc,k=5)
+grupos
+#table(grupos)
+```
+
+\# Analisando as principais variáveis a partir dos grupos
+
+```{r}
+boxplot(sanduiches$Sodio ~ grupos, col = "blue", main = 'Box Plot do Teor de Sódio')
+boxplot(sanduiches$Valor.Energetico ~ grupos, col = "green", main = 'Box Plot do Valor Energético')
+boxplot(sanduiches$Gordura.Trans ~ grupos, col = "green", main = 'Box Plot do Gordura Trans')
+```
+
+Podemos ver um outlier grande em gordura trans, que nao gera efeito, por estar numa escala pequena (8 entre outras variaveis que chegam em 2k)
+
+Para normalizar, precisamos deixar tudo na mesma escala.
+
+```{r}
+## ==========================================================
+## Refazendo os clusters, agora com as variáveis padronizadas
+## (para que tenham todas o mesmo peso)
+## ==========================================================
+
+sand_padr <- sanduiches
+for (i in 2:12) sand_padr[,i] <- scale(sand_padr[,i])
+```
+
+Tendo normalizado as escalas, agora vamos ver de novo o dendrograma
+
+```{r}
+# Implementa o algoritmo hierárquico e apresenta o dendrograma
+hc2 <- hclust(dist(sand_padr), "average")  # explorar com outros m?todos de distância
+p <- ggdendrogram(hc2, rotate=FALSE)
+print(p)
+ggdendrogram(hc2, rotate=TRUE)
+
+hcdata2 <- dendro_data(hc2)
+ggdendrogram(hcdata2, rotate=TRUE, size=2) + labs(title="Dendrograma dos Sanduíches (padronizado)")
+```
+
+Agora o Extra Burguer Salada esta grande como deveria.
+
+Separando em 3 grupos
+
+```{r}
+# "Cortando" a ?rvore em 3 grupos
+grupos2 <- cutree(hc2,k=3)
+grupos2
+```
+
+E analisando novamente as principais variaveis
+
+```{r}
+# Analisando as principais vari?veis a partir dos grupos
+boxplot(sand_padr$Sodio ~ grupos2, col = "green", main = 'Box Plot do Teor de Sodio')
+boxplot(sand_padr$Valor.Energetico ~ grupos2, col = "green", main = 'Box Plot do Valor Energetico')
+boxplot(sand_padr$Gordura.Trans ~ grupos2, col = "green", main = 'Box Plot do Gordura Trans')
+```
+
+## Kmeans, com variáveis padronizadas, usando o mesmo k do algoritmo hierárquico
+
+```{r}
+res_k <- kmeans(sand_padr[2:12],centers=3)
+gruposk <- res_k$cluster
+gruposk
+```
+
+\# Analisando as principais vari?veis a partir dos grupos
+
+```{r}
+# Analisando as principais vari?veis a partir dos grupos
+boxplot(sand_padr$Sodio ~ gruposk, col = "green", main = 'Box Plot do Teor de Sodio')
+boxplot(sand_padr$Valor.Energetico ~ gruposk, col = "green", main = 'Box Plot do Valor Energetico')
+```
+
+Testando outrs valores de k, através do WSS
+## (baseado em código de [http://www.learnbymarketing.com/tutorials/k-means-clustering-in-r-example/)](http://www.learnbymarketing.com/tutorials/k-means-clustering-in-r-example/))
+
+```{r}
+totaisgrupos <- 2:12
+
+tries <- 100 #Run the K Means algorithm 100 times
+
+avg.totw.ss <-integer(length(totaisgrupos)) #Set up an empty vector to hold all of points
+
+# Para cada n?mero de grupos
+for(v in 1:length(totaisgrupos))
+{
+ v.totw.ss <-integer(tries) #Set up an empty vector to hold the 100 tries
+ k <- totaisgrupos[v]
+
+ for(i in 1:tries)
+ {
+   k.temp <-kmeans(sand_padr[2:12],centers=k) #Run kmeans
+   v.totw.ss[i] <-k.temp$tot.withinss  #Store the total withinss
+ }
+ avg.totw.ss[v] <- mean(v.totw.ss) #Average the 100 total withinss
+
+}
+
+## Apresenta gr?fico com os resultados
+
+plot(totaisgrupos,avg.totw.ss,type="b", main="Total Within SS by Various K",
+ ylab="Average Total Within Sum of Squares",
+ xlab="Value of K")
+```
