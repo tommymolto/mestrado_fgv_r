@@ -44,8 +44,9 @@ compras <- read.table(paste(getwd(), "Rede_Two_Mode_Tarefa_Aulas_5_e_6.csv", sep
 
 ```{r}
 # Adaptando o data.frame compras para que possa servir para a montagem da rede
-gcompras <- compras[,2:6]
+gcompras <- compras[,2:16]
 rownames(gcompras) <- compras[,1]
+View(gcompras)
 ```
 
 \# Construindo a rede a partir da matriz de relações (0 e 1)
@@ -62,9 +63,9 @@ gplot(gcompras,gmode="twomode",displaylabels = TRUE,
 
 ```{r}
 # Explorando a rede
-degree(gcompras,gmode="twomode",cmode="indegree")
-closeness(gcompras,gmode="twomode")
-betweenness(gcompras,gmode="twomode")
+sna::degree(gcompras,gmode="twomode",cmode="indegree")
+sna::closeness(gcompras,gmode="twomode")
+sna::betweenness(gcompras,gmode="twomode")
 ```
 
 \# Aprimorando a representação da rede
@@ -73,7 +74,27 @@ betweenness(gcompras,gmode="twomode")
 # Aprimorando a representação da rede
 gplot(gcompras,gmode="twomode",displaylabels = TRUE,
       edge.col="gray",label.cex = 0.7,usearrows=FALSE,
-      vertex.cex = closeness(gcompras,gmode="twomode")*3)
+      vertex.cex = sna::closeness(gcompras,gmode="twomode")*3)
+```
+
+2-Dendograma Implementa o algoritmo hierárquico e apresenta o dendrograma:
+
+```{r}
+hc <- hclust(dist(gcompras), "average")  # explorar com outros métodos de distância que não average
+p <- ggdendrogram(hc, rotate=FALSE)       # (single, complete, ward.D)
+print(p)
+ggdendrogram(hc, rotate=TRUE)
+hcdata <- dendro_data(hc)
+ggdendrogram(hcdata, rotate=TRUE, size=2) + labs(title="Dendrograma dos Sanduíches")
+```
+
+Executando um corte em 5 grupos:
+
+```{r}
+# "Cortando" a árvore em 5 grupos
+grupos <- cutree(hc,k=5)
+grupos
+#table(grupos)
 ```
 
 ## \# Analise:

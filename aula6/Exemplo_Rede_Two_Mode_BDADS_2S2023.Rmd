@@ -68,7 +68,7 @@ sna::degree(gcompras,gmode="twomode",cmode="indegree")
 sna::closeness(gcompras,gmode="twomode")
 sna::betweenness(gcompras,gmode="twomode")
 ```
-Veja como os resultados fazem sentido pelas proximidades entre os dados de Joao e Maria, Pedro e Luisa
+Veja como os resultados fazem sentido pelas proximidades entre os dados de Joao e Maria, Pedro e Luisa, Jose e Paulo
 \# Aprimorando a representação da rede
 
 ```{r}

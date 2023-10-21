@@ -61,6 +61,98 @@ gplot(grede,gmode="graph",displaylabels = TRUE)
 gplot(grede,gmode="graph",displaylabels = TRUE,edge.col="gray",usearrows=FALSE)
 ```
 
+Utilizando a Rede One Mode do arquivo Rede One Mode_Tarefa Aulas 5 e 6.xlsx descreva :
+
+-   sua estrutura de componentes,
+
+-   nós,
+
+-   arestas,
+
+-   cliques,
+
+-   diâmetro,
+
+-   distância média e
+
+-   densidade.
+
+```{r}
+gden(grede, g=NULL, diag=FALSE, mode="graph", ignore.eval=FALSE)
+network.density(network(as.matrix(grede)))
+efficiency(grede, g=NULL, diag=FALSE)
+connectedness(grede)
+mutuality(grede)
+clique.census(grede, mode = "graph", tabulate.by.vertex = FALSE,
+    clique.comembership = "sum", enumerate = FALSE,
+    na.omit = TRUE)
+clique.census(grede, mode = "graph", tabulate.by.vertex = TRUE,
+    clique.comembership = "none", enumerate = FALSE,
+    na.omit = TRUE)
+
+clique.census(grede, mode = "graph", tabulate.by.vertex = TRUE,
+    clique.comembership = "bysize", enumerate = FALSE,
+    na.omit = TRUE)
+
+clique.census(grede, mode = "graph", tabulate.by.vertex = FALSE,
+    clique.comembership = "none", enumerate = TRUE,
+    na.omit = TRUE)
+
+clique.census(grede, mode = "graph", tabulate.by.vertex = FALSE,
+    clique.comembership = "sum", enumerate = FALSE,
+    na.omit = TRUE)
+
+clique.census(grede, mode = "graph", tabulate.by.vertex = FALSE,
+    clique.comembership = "sum", enumerate = FALSE,
+    na.omit = TRUE)
+```
+
+```{r}
+
+# Explorando a rede
+sna::degree(grede)
+sna::closeness(grede)
+sna::betweenness(grede)
+
+```
+
+```{r}
+i_grede <- graph_from_adjacency_matrix(as.matrix(grede),mode="undirected")
+clique_num(i_grede)
+cliques(i_grede)  # igraph define "clique" de forma diferente dos demais packages
+                   # "max clique" È equivalente a clique
+count_max_cliques(i_grede)
+max_cliques(i_grede)
+largest_cliques(i_grede)
+```
+
+Geodesic
+
+```{r}
+# Dist‚ncia GeodÈsica
+dg <- geodist(grede)
+dg
+dg$counts
+dg$gdist
+
+mdg <- dg$gdist
+colnames(mdg) <- colnames(grede)
+rownames(mdg) <- rownames(grede)
+mdg
+
+
+```
+
+gdist
+
+```{r}
+mdg <- dg$gdist
+colnames(mdg) <- colnames(grede)
+rownames(mdg) <- rownames(grede)
+mdg
+
+```
+
 Explorando a rede utilizando grau, proximidade e intermediação.
 
 *OBS: Para garantir o uso do sna, vamos colocar como se estivessemos orientando a instancia de que objeto seria, no modelo sna::funcao*
