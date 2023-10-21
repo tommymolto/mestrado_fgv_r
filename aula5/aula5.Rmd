@@ -55,7 +55,7 @@ print(p)
 ggdendrogram(hc, rotate=TRUE)
 ```
 
-Adiconando um titulo ao grafico:
+Adicionando um titulo ao grafico:
 
 ```{r}
 hcdata <- dendro_data(hc)

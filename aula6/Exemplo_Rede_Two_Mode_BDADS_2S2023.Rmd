@@ -1,0 +1,82 @@
+---
+title: "Exemplo_Rede_One_Mode_BDADS_2S2023"
+output: html_document
+date: "2023-10-01"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Tarefas Rede One
+
+Preparando o ambiente:
+
+**OBS: Para usuarios de Mac, a lib rgl tem dependencias anteriores!**
+
+```{r pressure, echo=FALSE}
+# Extensões para Análise de Redes
+#(devem ser previamente baixadas no CRAN do R)
+if (!require("network")) install.packages("network")
+if (!require("ggplot2")) install.packages("ggplot2")
+if (!require("sna")) install.packages("sna")
+if (!require("rgl")) install.packages("rgl")
+if (!require("ggdendro")) install.packages("ggdendro")
+if (!require("igraph")) install.packages("igraph")
+
+
+
+library("ggdendro")
+library(ggplot2)
+library(network)
+library(sna)
+library(rgl)
+library(igraph)
+```
+
+```{r }
+# Trabalha a partir de uma rede aleatória
+setwd(".")
+compras <- read.table(paste(getwd(), "Exemplo Rede TwoMode.csv", sep="/"),header=TRUE,sep = ";", dec=",")
+```
+
+\# Adaptando o data.frame compras para que possa servir para a montagem da rede
+
+```{r}
+# Adaptando o data.frame compras para que possa servir para a montagem da rede
+gcompras <- compras[,2:6]
+rownames(gcompras) <- compras[,1]
+```
+
+\# Construindo a rede a partir da matriz de relações (0 e 1)
+
+```{r}
+# Construindo a rede a partir da matriz de relações (0 e 1)
+gplot(gcompras)
+gplot(gcompras,gmode="twomode",displaylabels = TRUE)
+gplot(gcompras,gmode="twomode",displaylabels = TRUE,
+      edge.col="gray",label.cex = 0.7,usearrows=FALSE)
+```
+
+\# Explorando a rede
+*OBS: Para garantir o uso do sna, vamos colocar como se estivessemos orientando a instancia de que objeto seria, no modelo sna::funcao*
+
+```{r}
+# Explorando a rede
+sna::degree(gcompras,gmode="twomode",cmode="indegree")
+sna::closeness(gcompras,gmode="twomode")
+sna::betweenness(gcompras,gmode="twomode")
+```
+
+\# Aprimorando a representação da rede
+
+```{r}
+# Aprimorando a representação da rede
+gplot(gcompras,gmode="twomode",displaylabels = TRUE,
+      edge.col="gray",label.cex = 0.7,usearrows=FALSE,
+      vertex.cex = sna::closeness(gcompras,gmode="twomode")*3)
+```
+
+## \# Analise:
+
+\# Você acha que as medidas de centralidade de proximidade e intermediação \# são úteis no contexto da rede Two Mode?
