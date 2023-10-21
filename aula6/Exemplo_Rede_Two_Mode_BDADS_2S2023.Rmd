@@ -46,6 +46,7 @@ compras <- read.table(paste(getwd(), "Exemplo Rede TwoMode.csv", sep="/"),header
 # Adaptando o data.frame compras para que possa servir para a montagem da rede
 gcompras <- compras[,2:6]
 rownames(gcompras) <- compras[,1]
+View(gcompras)
 ```
 
 \# Construindo a rede a partir da matriz de relações (0 e 1)
@@ -67,7 +68,7 @@ sna::degree(gcompras,gmode="twomode",cmode="indegree")
 sna::closeness(gcompras,gmode="twomode")
 sna::betweenness(gcompras,gmode="twomode")
 ```
-
+Veja como os resultados fazem sentido pelas proximidades entre os dados de Joao e Maria, Pedro e Luisa
 \# Aprimorando a representação da rede
 
 ```{r}
